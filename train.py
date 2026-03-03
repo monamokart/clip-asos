@@ -40,8 +40,8 @@ def main(
     """
     processor = CLIPProcessor.from_pretrained(clip_version)
 
-    train_ds = ClipDataset(train_file, processor)
-    val_ds = ClipDataset(val_file, processor)
+    train_ds = ClipDataset(train_file, processor, bucket)
+    val_ds = ClipDataset(val_file, processor, bucket)
 
     train_loader = DataLoader(
         train_ds, batch_size=batch_size, shuffle=True, num_workers=2, collate_fn=collate_fn
@@ -63,9 +63,9 @@ def main(
 
         print(f"[Epoch {epoch+1}] loss={train_loss:.4f} | R@1={r1:.4f}")
 
-    model.save_pretrained(save_dir)
-    processor.save_pretrained(save_dir)
-    upload_folder_to_gcs(local_folder=save_dir, bucket_name=bucket, gcs_prefix=f"models/{save_dir}")
+        model.save_pretrained(save_dir)
+        processor.save_pretrained(save_dir)
+        upload_folder_to_gcs(local_folder=save_dir, bucket_name=bucket, gcs_prefix=f"models/{save_dir}")
 
 
 if __name__ == "__main__":

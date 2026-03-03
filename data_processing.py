@@ -24,16 +24,24 @@ def load_image(url: str, timeout: int = 5) -> Image.Image:
 
 
 class ClipDataset(Dataset):
-    def __init__(self, csv_path, processor):
-        self.df = pd.read_csv(csv_path)
+    def __init__(self, csv_path, processor, bucket_name):
+        self.df = pd.read_csv(csv_path).dropna()
         self.processor = processor
+        self.bucket_name = bucket_name
+        self.gcs_client = storage.Client()
 
     def __len__(self):
         return len(self.df)
 
     def __getitem__(self, idx):
         row = self.df.iloc[idx]
-        image = load_image(row["im"])
+        filename = row["im"].split('/')[4] + ".png"
+        bucket = self.gcs_client.bucket(self.bucket_name)
+        blob = bucket.blob(f"images/{filename}")
+        image_bytes = blob.download_as_bytes()
+
+        
+        image = Image.open(BytesIO(image_bytes)).convert("RGB")
         text = row["text"]
 
         inputs = self.processor(
