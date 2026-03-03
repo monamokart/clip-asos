@@ -65,7 +65,9 @@ def main(
 
         model.save_pretrained(save_dir)
         processor.save_pretrained(save_dir)
-        upload_folder_to_gcs(local_folder=save_dir, bucket_name=bucket, gcs_prefix=f"models/{save_dir}")
+        upload_folder_to_gcs(
+            local_folder=save_dir, bucket_name=bucket, gcs_prefix=f"models/{save_dir}"
+        )
 
 
 if __name__ == "__main__":

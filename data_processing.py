@@ -35,12 +35,11 @@ class ClipDataset(Dataset):
 
     def __getitem__(self, idx):
         row = self.df.iloc[idx]
-        filename = row["im"].split('/')[4] + ".png"
+        filename = row["im"].split("/")[4] + ".png"
         bucket = self.gcs_client.bucket(self.bucket_name)
         blob = bucket.blob(f"images/{filename}")
         image_bytes = blob.download_as_bytes()
 
-        
         image = Image.open(BytesIO(image_bytes)).convert("RGB")
         text = row["text"]
 
