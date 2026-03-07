@@ -23,6 +23,10 @@ dependencies = [
     "matplotlib (>=3.10.8,<4.0.0)"
 ]
 
+[tool.poetry]
+packages = [
+    { include = "clip_asos" }
+]
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
